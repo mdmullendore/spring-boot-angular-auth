@@ -152,7 +152,7 @@ Spring validates email + password via BCrypt
 JWT token generated and returned
         │
         ▼
-Token stored in localStorage
+Token stored
         │
         ▼
 JWT Interceptor attaches token to all subsequent requests
