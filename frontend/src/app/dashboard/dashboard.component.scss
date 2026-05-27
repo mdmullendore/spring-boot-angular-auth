@@ -1,0 +1,44 @@
+@use '../../styles' as *;
+
+.dashboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: $color-bg;
+}
+
+.dashboard-card {
+  background: $color-surface;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  text-align: center;
+
+  h1 {
+    font-size: 1.75rem;
+    color: $color-text;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: $color-text-muted;
+    margin-bottom: 2rem;
+  }
+}
+
+.btn-logout {
+  padding: 0.65rem 1.5rem;
+  background-color: $color-error;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}

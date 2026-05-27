@@ -1,0 +1,50 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-title">Welcome back</h2>
+    <p class="auth-subtitle">Sign in to your account</p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="you@example.com"
+          [class.input-error]="email?.invalid && email?.touched"
+        />
+        <span class="error" *ngIf="email?.invalid && email?.touched">
+          Please enter a valid email address.
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+          [class.input-error]="password?.invalid && password?.touched"
+        />
+        <span class="error" *ngIf="password?.invalid && password?.touched">
+          Password must be at least 8 characters.
+        </span>
+      </div>
+
+      <span class="error server-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </span>
+
+      <button type="submit" class="btn-primary" [disabled]="loading">
+        {{ loading ? 'Signing in...' : 'Sign in' }}
+      </button>
+
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account? <a routerLink="/auth/register">Register</a>
+    </p>
+  </div>
+</div>
