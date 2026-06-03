@@ -1,8 +1,4 @@
 package com.example.springBootAngularAuth.dto;
 
-public record AuthResponse(
-
-		String token
-
-) {
+public record AuthResponse(String email) {
 }

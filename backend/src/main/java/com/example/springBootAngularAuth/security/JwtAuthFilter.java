@@ -2,6 +2,7 @@ package com.example.springBootAngularAuth.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,18 +29,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 			FilterChain filterChain)
 			throws ServletException, IOException {
 
-		final String authHeader = request.getHeader("Authorization");
+		final String token = resolveToken(request);
 
-		// If no Bearer token, skip this filter
-		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+		if (token == null) {
 			filterChain.doFilter(request, response);
 			return;
 		}
 
-		final String token = authHeader.substring(7); // Strip "Bearer "
 		final String email = jwtService.extractEmail(token);
 
-		// Only authenticate if email found and not already authenticated
 		if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
@@ -53,5 +51,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 		}
 
 		filterChain.doFilter(request, response);
+	}
+
+	private String resolveToken(HttpServletRequest request) {
+		final String authHeader = request.getHeader("Authorization");
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			return authHeader.substring(7);
+		}
+
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (JwtCookieHelper.COOKIE_NAME.equals(cookie.getName())) {
+					String value = cookie.getValue();
+					if (value != null && !value.isBlank()) {
+						return value;
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 }

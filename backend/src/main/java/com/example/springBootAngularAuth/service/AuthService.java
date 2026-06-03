@@ -1,7 +1,7 @@
 package com.example.springBootAngularAuth.service;
 
 import com.example.springBootAngularAuth.dto.AuthRequest;
-import com.example.springBootAngularAuth.dto.AuthResponse;
+import com.example.springBootAngularAuth.dto.AuthResult;
 import com.example.springBootAngularAuth.dto.RegisterRequest;
 import com.example.springBootAngularAuth.model.User;
 import com.example.springBootAngularAuth.repository.UserRepository;
@@ -21,7 +21,7 @@ public class AuthService {
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
 
-	public AuthResponse register(RegisterRequest request) {
+	public AuthResult register(RegisterRequest request) {
 		if (userRepository.findByEmail(request.email()).isPresent()) {
 			throw new RuntimeException("Email already registered");
 		}
@@ -33,10 +33,10 @@ public class AuthService {
 		userRepository.save(user);
 
 		String token = jwtService.generateToken(user.getEmail());
-		return new AuthResponse(token);
+		return new AuthResult(user.getEmail(), token);
 	}
 
-	public AuthResponse login(AuthRequest request) {
+	public AuthResult login(AuthRequest request) {
 		authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(
 						request.email(),
@@ -46,6 +46,6 @@ public class AuthService {
 				.orElseThrow(() -> new RuntimeException("User not found"));
 
 		String token = jwtService.generateToken(user.getEmail());
-		return new AuthResponse(token);
+		return new AuthResult(user.getEmail(), token);
 	}
 }
