@@ -30,6 +30,7 @@ A full-stack user authentication demo. Implements a complete login and registrat
 ```
 spring-boot-angular-auth/
 ├── backend/                  # Spring Boot application
+│   ├── Dockerfile
 │   ├── src/
 │   │   └── main/java/com/example/springBootAngularAuth/
 │   │       ├── controller/   # REST endpoints
@@ -40,6 +41,7 @@ spring-boot-angular-auth/
 │   │       └── service/      # Business logic
 │   └── pom.xml
 ├── frontend/                 # Angular application
+│   ├── Dockerfile
 │   └── src/app/
 │       ├── auth/
 │       │   ├── guards/       # Route protection
@@ -48,6 +50,7 @@ spring-boot-angular-auth/
 │       │   ├── login/        # Login component
 │       │   └── register/     # Register component
 │       └── dashboard/        # Protected route
+├── docker-compose.yml        # Orchestrates all services
 └── README.md
 ```
 
@@ -59,6 +62,79 @@ spring-boot-angular-auth/
 |--------|-----------------------|-----------|----------------------|
 | POST   | /api/auth/register    | Public    | Register a new user  |
 | POST   | /api/auth/login       | Public    | Login, returns JWT   |
+
+---
+
+## Running with Docker
+
+The fastest way to run the full stack. Docker Compose starts PostgreSQL, builds the backend and frontend, and wires them together — no local Java, Node, or Postgres install required.
+
+### Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or Docker Engine + Docker Compose v2)
+
+### Start the app
+
+From the project root:
+
+```bash
+docker compose up --build
+```
+
+The first run may take a few minutes while images are built. When all services are up:
+
+| Service    | URL                        |
+|------------|----------------------------|
+| Frontend   | http://localhost:4200      |
+| Backend    | http://localhost:8080      |
+| PostgreSQL | localhost:5432             |
+
+Open http://localhost:4200 in your browser to use the app.
+
+![Login Screen](./frontend/public/login.png)
+
+The backend waits for PostgreSQL to become healthy before starting. Database schema is created automatically via Hibernate (`ddl-auto: update`).
+
+### Docker configuration
+
+| Setting   | Value              |
+|-----------|--------------------|
+| Database  | `springBootPostgres` |
+| DB user   | `app`              |
+| DB password | `app`            |
+| Spring profile | `docker` (see `backend/src/main/resources/application-docker.properties`) |
+
+### Useful commands
+
+Run in the background:
+
+```bash
+docker compose up --build -d
+```
+
+View logs:
+
+```bash
+docker compose logs -f
+```
+
+Rebuild after code changes:
+
+```bash
+docker compose up --build
+```
+
+Stop and remove containers:
+
+```bash
+docker compose down
+```
+
+Stop containers and delete the database volume:
+
+```bash
+docker compose down -v
+```
 
 ---
 
