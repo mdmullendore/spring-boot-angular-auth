@@ -204,9 +204,6 @@ ng serve
 
 The app will be available at `http://localhost:4200`.
 
-
-![Login Screen](./frontend/public/login.png)
-
 ---
 
 ### 5. Test the API with Postman
